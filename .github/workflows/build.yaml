@@ -55,7 +55,8 @@ jobs:
         with:
           nuitka-version: main
           script-name: ytm2spt.py
-          onefile: false
+          enable-plugins: pyside6
+          include-package-data: ytmusicapi
        
       - name: Build Windows Installer
         if: matrix.os == 'windows-latest'

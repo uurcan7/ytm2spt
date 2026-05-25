@@ -1,4 +1,0 @@
-- module-name: 'ytmusicapi'
-  data-files:
-    dirs:
-      - 'locales'

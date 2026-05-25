@@ -3,6 +3,11 @@ name: Build and Release
 on:
   push:
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release Tag'
+        required: false
+        default: 'manuel-surum'
 
 jobs:
   build:
@@ -79,28 +84,6 @@ jobs:
             build/*.app/**/*
           overwrite: true
 
-  publish-to-pypi:
-    name: >-
-      Publish Python distribution to PyPI
-    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
-    needs:
-    - build
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/ytm2spt
-    permissions:
-      id-token: write 
-
-    steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-
   release:
     name: >-
       Create a GitHub Release
@@ -110,7 +93,6 @@ jobs:
 
     permissions:
       contents: write 
-      id-token: write 
 
     steps:
     - name: Download all the dists
@@ -118,12 +100,6 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    - name: Sign the dists with Sigstore
-      uses: sigstore/gh-action-sigstore-python@v3.0.0
-      with:
-        inputs: >-
-          ./dist/*.tar.gz
-          ./dist/*.whl
        
     - name: Download All Artifacts
       uses: actions/download-artifact@v4
@@ -153,6 +129,7 @@ jobs:
       with:
         draft: true
         generate_release_notes: true
+        tag_name: ${{ github.event.inputs.tag || github.ref_name }}
         files: |
           *build/ytm2spt-windows.zip
           *build/ytm2spt-linux.tar.gz

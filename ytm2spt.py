@@ -1,6 +1,5 @@
 # Nuitka Configuration
 # nuitka-project: --enable-plugins=pyside6
-# nuitka-project: --user-package-configuration-file=ytmusicapi.nuitka-package.config.yaml
 #
 # Debugging options, controlled via environment variable at compile time.
 # nuitka-project-if: os.getenv("DEBUG_COMPILATION", "yes") == "yes":
